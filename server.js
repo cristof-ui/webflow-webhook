@@ -29,7 +29,7 @@ app.post('/webflow-hook', async (req, res) => {
       phone_number: phone,
       submitted_at: new Date().toISOString(),
       form_url: 'https://jarvis-tree-experts.webflow.io/contact',
-      referring_url: 'https://jarvis-tree-experts.webflow.io/
+      referrer: 'https://jarvis-tree-experts.webflow.io/contact'
     }
   };
   // Log the payload to verify structure

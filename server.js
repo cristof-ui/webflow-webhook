@@ -19,29 +19,36 @@ app.post('/webflow-hook', async (req, res) => {
 
   // Track submission in CallRail
   try {
-    const callrailRes = await axios.post(
-      'https://api.callrail.com/v3/a/214552196/form_submissions.json',
-      {
-        form_submission: {
+  // Log all variables to ensure they are defined
+  console.log('CallRail variables:', { name, email, phone });
+
+  const callrailPayload = {
+    form_submission: {
       name,
       email,
       phone_number: phone,
       submitted_at: new Date().toISOString(),
       form_url: 'https://jarvis-tree-experts.webflow.io/contact',
-      referrer: 'https://jarvis-tree-experts.webflow.io/contact' // ✅ Correct key for CallRail
+      referrer: 'https://jarvis-tree-experts.webflow.io/contact'
+    }
+  };
+  // Log the payload to verify structure
+  console.log('CallRail Payload:', JSON.stringify(callrailPayload, null, 2));
+
+  const callrailRes = await axios.post(
+    'https://api.callrail.com/v3/a/214552196/form_submissions.json',
+    callrailPayload,
+    {
+      headers: {
+        Authorization: 'Token token=6a7c51cc3ec13c42f627c74941dff8e0',
+        'Content-Type': 'application/json',
       }
-      },
-      {
-        headers: {
-          Authorization: 'Token token=6a7c51cc3ec13c42f627c74941dff8e0',
-          'Content-Type': 'application/json',
-        }
-      }
-    );
-    console.log('✅ CallRail response:', callrailRes.data);
-  } catch (err) {
-    console.error('❌ CallRail Error:', err.response?.data || err.message);
-  }
+    }
+  );
+  console.log('✅ CallRail response:', callrailRes.data);
+} catch (err) {
+  console.error('❌ CallRail Error:', err.response?.data || err.message);
+}
 
   // Submit as a lead to SingleOps
   try {
